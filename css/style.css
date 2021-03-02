@@ -1,0 +1,8 @@
+.container {
+    background-color: gray;
+}
+
+input[type="radio"] {
+     -webkit-appearance: checkbox;
+     -moz-appearance: checkbox;
+}

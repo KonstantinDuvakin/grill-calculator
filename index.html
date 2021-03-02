@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <script>
+
+    function CBR_XML_Daily_Ru(rates) {
+    var EURrate = rates.Valute.EUR.Value.toFixed(4);
+    var EUR = document.getElementById('euro');
+    EUR.innerHTML = EUR.innerHTML.replace('00.0000', EURrate);
+    };
+
+    </script>
+    <link rel="dns-prefetch" href="https://www.cbr-xml-daily.ru/" />
+    <script src="//www.cbr-xml-daily.ru/daily_jsonp.js" async></script>
+    <link rel="stylesheet" href="css/grid.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container col-md-6 py-2">
+    <form action="#">
+        <div class="row justify-content-between my-3">
+            <div class="col-md-6">
+                <span>Курс Евро</span>
+            </div>
+            <div class="col-md-6" id="euro">
+                00.0000 руб.
+            </div>
+        </div>
+        <div class="row justify-content-between my-3">
+            <div class="col-md-6">
+                <label for="shop">Магазин</label>
+                <input type="text" class="form-control w-100" id="shop" placeholder="Название магазина">
+            </div>
+            <div class="col-md-6">
+                <label for="itemCode">Код товара</label>
+                <input type="text" class="form-control w-100" id="itemCode" placeholder="Введите код товара">
+            </div>
+        </div>
+        <div class="my-3" id="shopChoose">
+            <input type="radio" name="shop" id="kRautacheck" checked>
+            <label class="form-check-label" for="kRautacheck">K-Rauta</label>
+            <input type="radio" name="shop" id="shopCheck">
+            <label class="form-check-label" for="shopCheck">Другой магазин</label>
+        </div>
+        <div class="row justify-content-between my-3">
+            <div class="col-md-6">
+                <label for="itemName">Наименование товара</label>
+                <input type="text" class="form-control w-100" id="itemName">
+            </div>
+        </div>
+        <div class="row justify-content-between my-3">
+            <div class="col-md-6">
+                <label for="itemPrice">Цена в магазине в Финляндии (EURO)</label>
+                <input type="text" class="form-control w-100" id="itemPrice" value="900" placeholder="0">
+            </div>
+        </div>
+        <div class="row justify-content-between my-3">
+            <div class="col-md-6">
+                <label for="itemWeight">Вес товара (кг)</label>
+                <input type="text" class="form-control w-100" id="itemWeight" value="72">
+            </div>
+        </div>
+        <div class="my-3">
+            <div class="form-group form-check">
+                <input type="radio" name="order" id="orderMyself" checked>
+                <label for="orderMyself">Оформлю сам</label>
+                <input type="radio" name="order" id="orderShipper">
+                <label for="orderShipper">Оформляет перевозчик</label>
+            </div>
+        </div>
+        <div class="row justify-content-between my-3">
+            <div class="col-md-6" id="finalPrice"></div>
+            <div class="col-md-6">
+                <button type="submit" id="result">Рассчитать и запросить</button>
+            </div>
+        </div>
+        <div class="justify-content-end w-100">
+            <a href="https://www.cbr-xml-daily.ru/">Виджет курсов валют</a>
+        </div>
+    </form>
+</div>
+
+<script>
+
+    let koefNDS = 0.8;
+    let koefBayer = 1;
+    let transPrice = 0;
+    let invoicePrice;
+    let itemPrice = document.querySelector('#itemPrice');
+    let kRautaCheck = document.querySelector('#kRautacheck');
+    let shopCheck = document.querySelector('#shopCheck');
+    let euroText = document.querySelector('#euro').textContent;
+    console.log(euroText);
+    let euro = parseFloat(euroText);
+    console.log(euro);
+
+    kRautaCheck.onchange = function () {
+        invoicePrice = (+itemPrice.value * +koefNDS * +koefBayer) + +transPrice;
+        kRautaCheck.setAttribute(`checked`, ``);
+        shopCheck.removeAttribute(`checked`);
+        console.log(invoicePrice);
+    }
+
+    shopCheck.onchange = function () {
+        invoicePrice = (+itemPrice.value * +koefNDS) + (+itemPrice.value * +koefNDS * +koefBayer) + +transPrice;
+        shopCheck.setAttribute(`checked`, ``);
+        kRautaCheck.removeAttribute(`checked`);
+        console.log(invoicePrice);
+    }
+
+    /*if (kRautaCheck.hasAttribute(`checked`)) {
+        invoicePrice = (+itemPrice.value * +koefNDS * +koefBayer) + +transPrice;
+    } else if (shopCheck.hasAttribute(`checked`)) {
+        invoicePrice = (+itemPrice.value * +koefNDS) + (+itemPrice.value * +koefNDS * +koefBayer) + +transPrice;
+    }
+
+    console.log(invoicePrice);*/
+
+    /*let shopChoose = document.querySelector('#shopChoose');
+    shopChoose.onclick = function (event) {
+        let target = event.target;
+
+        if(event.target === kRautaCheck) {
+            invoicePrice = (+itemPrice.value * +koefNDS * +koefBayer) + +transPrice;
+            console.log(invoicePrice);
+        }
+
+        if(event.target === shopCheck) {
+            invoicePrice = (+itemPrice.value * +koefNDS) + (+itemPrice.value * +koefNDS * +koefBayer) + +transPrice;
+            console.log(invoicePrice);
+        }
+    }*/
+
+    let sumWeightInv = 500;
+    let sumPriceInv = 5000;
+
+    let permFinland = 500;
+    let gas = 3500;
+    let termChargesCar = 10000;
+    let driverSalary = 10000;
+    let inform = 2000;
+    let transit = 3000;
+    let other = 1000;
+
+    let sumCosts = permFinland + gas + termChargesCar + driverSalary + inform + transit + other;
+    console.log(sumCosts);
+    let sumCostPerKilo = sumCosts / sumWeightInv;
+    console.log(sumCostPerKilo);
+    let sumCostsEuro = +(sumCosts / euro).toFixed(2);
+    console.log(sumCostsEuro);
+    let sumCostPerKiloEuro = +(sumCostPerKilo / +euro).toFixed(2);
+    console.log(sumCostPerKiloEuro);
+
+    let koefPrice = 0.07;
+    let expendInd = +(sumPriceInv * koefPrice).toFixed(2);
+    console.log(expendInd);
+
+    let costPartGood = +(invoicePrice * koefPrice).toFixed(2);
+    console.log(costPartGood);
+
+    let itemWeight = document.querySelector('#itemWeight');
+
+    let weightPartGood = +(+itemWeight.value * sumCostPerKiloEuro).toFixed(2);
+    console.log(weightPartGood);
+
+    let costPartFinal;
+    if(weightPartGood > costPartGood) {
+        costPartFinal = weightPartGood;
+    } else {
+        costPartFinal = costPartGood;
+    };
+    console.log(costPartFinal);
+
+    let costCustomDuty;
+    let weightCustomDuty;
+
+    if (invoicePrice > 200) {
+        costCustomDuty = +((invoicePrice - 200) * 0.15).toFixed(2);
+    } else {
+        costCustomDuty = 0;
+    };
+    console.log(costCustomDuty);
+
+    if (+itemWeight.value > 31) {
+        weightCustomDuty = +((+itemWeight.value - 31) * 2).toFixed(2);
+    } else {
+        weightCustomDuty = 0;
+    };
+    console.log(weightCustomDuty);
+
+    let finalCustomDuty;
+
+    if (costCustomDuty > weightCustomDuty) {
+        finalCustomDuty = costCustomDuty;
+    } else {
+        finalCustomDuty = weightCustomDuty;
+    }
+    console.log(finalCustomDuty);
+
+    let orderMyself = document.querySelector('#orderMyself');
+    let orderShipper = document.querySelector('#orderShipper');
+    let orderCostFinal;
+
+    if (orderMyself.checked) {
+        orderCostFinal = 0;
+    };
+    if (orderShipper.checked) {
+        orderCostFinal = 1500;
+    };
+    console.log(orderCostFinal);
+
+    let koefProfitPerc;
+    if (+itemPrice.value < 20) {
+        koefProfitPerc = 0.6;
+    } else if (+itemPrice.value >= 20 && +itemPrice.value < 50) {
+        koefProfitPerc = 0.5;
+    } else if (+itemPrice.value >= 50 && +itemPrice.value < 100) {
+        koefProfitPerc = 0.4;
+    } else if (+itemPrice.value >= 100 && +itemPrice.value < 200) {
+        koefProfitPerc = 0.3;
+    } else if (+itemPrice.value >= 200) {
+        koefProfitPerc = 0.18;
+    };
+    console.log(koefProfitPerc);
+
+    let koefEuroToKilo;
+    if (+itemWeight.value < 5) {
+        koefEuroToKilo = 3;
+    } else if (+itemWeight.value >= 5 && +itemWeight.value < 10) {
+        koefEuroToKilo = 2.5;
+    } else if (+itemWeight.value >= 10 && +itemWeight.value < 20) {
+        koefEuroToKilo = 2;
+    } else if (+itemWeight.value >= 20 && +itemWeight.value < 31) {
+        koefEuroToKilo = 1.8;
+    } else if (+itemWeight.value >= 31) {
+        koefEuroToKilo = 1.6;
+    };
+    console.log(koefEuroToKilo);
+
+    let costProfitEval = +itemPrice.value * koefProfitPerc;
+    console.log(costProfitEval);
+
+    let weightProfitEval = +itemWeight.value * koefEuroToKilo;
+    console.log(weightProfitEval);
+
+    let finalProfitEuro;
+    if (costProfitEval < weightProfitEval) {
+        finalProfitEuro = costProfitEval;
+    } else {
+        finalProfitEuro = weightProfitEval;
+    }
+    console.log(finalProfitEuro);
+
+    let finalProfit = finalProfitEuro * +euro;
+    console.log(finalProfit);
+
+    let koefTax = 1.06;
+    let finalCostSPB = (((invoicePrice + costPartFinal + finalCustomDuty + orderCostFinal + finalProfitEuro) * koefTax) * +euro).toFixed(2);
+    let finalPrice = document.querySelector('#finalPrice');
+    if (isNaN(finalCostSPB)) {
+        finalPrice.innerHTML = `0`;
+    } else {
+        finalPrice.innerHTML = `${finalCostSPB}`;
+    }
+    console.log(finalCostSPB);
+
+</script>
+
+</body>
+</html>
