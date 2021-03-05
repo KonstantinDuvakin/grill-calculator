@@ -15,10 +15,31 @@ label {
     margin-left: 2px;
 }
 
+small {
+    margin-left: 2px;
+}
+
 .row {
     text-align: start;
     padding-left: 150px;
     padding-right: 150px;
+}
+
+@media (max-width: 500px) {
+
+    h1 {
+        font-size: 18px;
+    }
+
+    .row {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .choice {
+        padding-left: 25px !important;
+        padding-right: 15px !important;
+    }
 }
 
 p {
@@ -117,4 +138,13 @@ input:active {
 #finalPrice {
     display: none;
     background-color: wheat;
+}
+
+.link {
+    font-size: 6px;
+    background-color: lightgray;
+}
+
+.link a {
+    color: lightgray;
 }
